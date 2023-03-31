@@ -121,11 +121,27 @@ describe("CopilotC", async () => {
         expect(await cc.address).not.to.equal(constants.AddressZero);
     });
 
-    it("cc.func => name()", async () => {
-        expect(await cc.name()).to.equal("CopilotC");
+    it("cc.func => votingDelay()", async () => {
+        expect(await cc.votingDelay()).to.equal(1);
     });
 
-    it("cc.func => symbol()", async () => {
-        expect(await cc.symbol()).to.equal("CPC");
+    it("cc.func => votingPeriod()", async () => {
+        expect(await cc.votingPeriod()).to.equal(50400);
+    });
+
+    it("cc.func => propose()", async () => {
+        await cc.propose([ma.address], [0], ["0x"], "test1");
+        await cc.propose([ma.address], [1], ["0x"], "test2");
+        await cc.propose([ma.address], [2], ["0x"], "test3");
+    });
+
+    it("cc.func => castVote()", async () => {
+        await cc.propose([ma.address], [0], ["0x"], "test1");
+        await cc.propose([ma.address], [1], ["0x"], "test2");
+        await cc.propose([ma.address], [2], ["0x"], "test3");
+
+        await cc.castVote(1, 1);
+        await cc.castVote(2, 1);
+        await cc.castVote(3, 1);
     });
 });
