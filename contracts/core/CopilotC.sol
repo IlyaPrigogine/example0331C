@@ -11,11 +11,10 @@ contract CopilotC is Governor, GovernorCountingSimple, GovernorVotes, GovernorVo
         Governor("MyGovernor")
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(4){
-
     }
 
     function votingDelay() public pure override returns (uint256) {
-        return 1; // 1 block
+        return 1000; // 1 block
     }
 
     function votingPeriod() public pure override returns (uint256) {

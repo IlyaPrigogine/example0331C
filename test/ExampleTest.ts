@@ -122,72 +122,125 @@ describe("CopilotC", async () => {
     });
 
     it("cc.func => votingDelay()", async () => {
-        expect(await cc.votingDelay()).to.equal(1);
+        expect(await cc.votingDelay()).to.equal(1000);
     });
 
     it("cc.func => votingPeriod()", async () => {
         expect(await cc.votingPeriod()).to.equal(50400);
     });
 
-    it("cc.func => propose()", async () => {
-        await cc.propose([ma.address], [0], ["0x"], "test1");
-        await cc.propose([ma.address], [1], ["0x"], "test2");
-        await cc.propose([ma.address], [2], ["0x"], "test3");
-    });
+    // it("cc.func => propose()", async () => {
+    //     await cc.propose([ma.address], [0], ["0x"], "test1");
+    //     await cc.propose([ma.address], [1], ["0x"], "test2");
+    //     await cc.propose([ma.address], [2], ["0x"], "test3");
+    // });
 
-    it("cc.func => castVote()", async () => {
+    // it("cc.func => castVote()", async () => {
+    //
+    //     let params: any = [[ma.address], [0], ["0x"], "test1"]
+    //
+    //     // propose
+    //     await cc.propose(...params);
+    //
+    //     // get proposal id from hashProposal
+    //     params[3] = keccak256(new Buffer(params[3]));
+    //     let proposalId = await cc.hashProposal(...params);
+    //     console.log(`proposalId: ${proposalId}`);
+    //
+    //     // delegate votes
+    //     await ma.delegate(owner.address);
+    //
+    //     // wait for votingDelay
+    //     await mineBlocks(1);
+    //
+    //     await cc.castVote(proposalId, 1); //  0 against / 1 for / 2 abstain
+    //
+    //     let votes = await cc.proposalVotes(proposalId);
+    //     console.log(`againstVotes: ${votes[0]}`);
+    //     console.log(`forVotes: ${votes[1]}`);
+    //     console.log(`abstainVotes: ${votes[2]}`);
+    //
+    // });
+
+    // it("cc.func => castVote() V2", async () => {
+    //     let params: any = [[ma.address], [0], ["0x"], "test1"]
+    //     await cc.propose(...params);
+    //     params[3] = keccak256(new Buffer(params[3]));
+    //     let proposalId = await cc.hashProposal(...params);
+    //     await ma.delegate(owner.address);
+    //     await mineBlocks(1);
+    //     await cc.castVote(proposalId, 1); //  0 against / 1 for / 2 abstain
+    //
+    //     let votes = await cc.proposalVotes(proposalId);
+    //     console.log(`againstVotes: ${formatEther(votes[0])}`);
+    //     console.log(`forVotes: ${formatEther(votes[1])}`);
+    // });
+
+    // it("cc.func => castVote() V3", async () => {
+    //     await ma.transfer(user0.address, parseEther("100"));
+    //
+    //
+    //     let params: any = [[ma.address], [0], ["0x"], "test1"]
+    //     await cc.propose(...params);
+    //     params[3] = keccak256(new Buffer(params[3]));
+    //     let proposalId = await cc.hashProposal(...params);
+    //
+    //
+    //
+    //     await ma.delegate(owner.address);
+    //     await mineBlocks(1);
+    //     await cc.castVote(proposalId, 1); //  0 against / 1 for / 2 abstain
+    //
+    //     let votes = await cc.proposalVotes(proposalId);
+    //     console.log(`againstVotes: ${formatEther(votes[0])}`);
+    //     console.log(`forVotes: ${formatEther(votes[1])}`);
+    // });
+
+    it("cc.func => castVote() V4", async () => {
+        await ma.transfer(user0.address, parseEther("100"));
+        await ma.transfer(user1.address, parseEther("1000"));
 
         let params: any = [[ma.address], [0], ["0x"], "test1"]
-
-        // propose
-        await cc.propose(...params);
-
-        // get proposal id from hashProposal
-        params[3] = keccak256(new Buffer(params[3]));
-        let proposalId = await cc.hashProposal(...params);
-        console.log(`proposalId: ${proposalId}`);
-
-        // delegate votes
-        await ma.delegate(owner.address);
-
-        // wait for votingDelay
-        await mineBlocks(1);
-
-        await cc.castVote(proposalId, 1); //  0 against / 1 for / 2 abstain
-
-        let votes = await cc.proposalVotes(proposalId);
-        console.log(`againstVotes: ${votes[0]}`);
-        console.log(`forVotes: ${votes[1]}`);
-        console.log(`abstainVotes: ${votes[2]}`);
-
-    });
-
-    it("cc.func => castVote()", async () => {
-        let params: any = [[ma.address], [0], ["0x"], "test1"]
         await cc.propose(...params);
         params[3] = keccak256(new Buffer(params[3]));
         let proposalId = await cc.hashProposal(...params);
+
         await ma.delegate(owner.address);
-        await mineBlocks(1);
-        await cc.castVote(proposalId, 1); //  0 against / 1 for / 2 abstain
+        await ma.connect(user0).delegate(user0.address);
+        await ma.connect(user1).delegate(user0.address);
+        await mineBlocks(1000);
+        await cc.castVote(proposalId, 1);
+        await cc.connect(user0).castVote(proposalId, 0);
+        await cc.connect(user1).castVote(proposalId, 2);
+
 
         let votes = await cc.proposalVotes(proposalId);
         console.log(`againstVotes: ${formatEther(votes[0])}`);
         console.log(`forVotes: ${formatEther(votes[1])}`);
+        console.log(`abstain: ${formatEther(votes[2])}`);
     });
 
-    it("cc.func => castVote() v2", async () => {
+    it("cc.func => castVote() V5", async () => {
+        await ma.transfer(user0.address, parseEther("100"));
+        await ma.transfer(user1.address, parseEther("1000"));
+
         let params: any = [[ma.address], [0], ["0x"], "test1"]
         await cc.propose(...params);
         params[3] = keccak256(new Buffer(params[3]));
         let proposalId = await cc.hashProposal(...params);
+
         await ma.delegate(owner.address);
-        await mineBlocks(1);
-        await cc.castVote(proposalId, 1); //  0 against / 1 for / 2 abstain
+        await ma.connect(user0).delegate(user0.address);
+        await ma.connect(user1).delegate(user1.address);
+        await mineBlocks(1000);
+        await cc.castVote(proposalId, 1);
+        await cc.connect(user0).castVote(proposalId, 0);
+        await cc.connect(user1).castVote(proposalId, 2);
+
 
         let votes = await cc.proposalVotes(proposalId);
         console.log(`againstVotes: ${formatEther(votes[0])}`);
         console.log(`forVotes: ${formatEther(votes[1])}`);
+        console.log(`abstain: ${formatEther(votes[2])}`);
     });
-
 });
