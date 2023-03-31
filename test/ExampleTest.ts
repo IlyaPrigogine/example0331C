@@ -116,9 +116,9 @@ describe("CopilotC", async () => {
         user0 = fixture.user0;
         user1 = fixture.user1;
         user2 = fixture.user2;
-    })
+    });
     it("cc.func => address", async () => {
-        console.log(`cc.address: ${cc.address}`);
+        expect(await cc.address).not.to.equal(constants.AddressZero);
     });
 
     it("cc.func => name()", async () => {
