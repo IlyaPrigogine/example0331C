@@ -161,4 +161,33 @@ describe("CopilotC", async () => {
         console.log(`abstainVotes: ${votes[2]}`);
 
     });
+
+    it("cc.func => castVote()", async () => {
+        let params: any = [[ma.address], [0], ["0x"], "test1"]
+        await cc.propose(...params);
+        params[3] = keccak256(new Buffer(params[3]));
+        let proposalId = await cc.hashProposal(...params);
+        await ma.delegate(owner.address);
+        await mineBlocks(1);
+        await cc.castVote(proposalId, 1); //  0 against / 1 for / 2 abstain
+
+        let votes = await cc.proposalVotes(proposalId);
+        console.log(`againstVotes: ${formatEther(votes[0])}`);
+        console.log(`forVotes: ${formatEther(votes[1])}`);
+    });
+
+    it("cc.func => castVote() v2", async () => {
+        let params: any = [[ma.address], [0], ["0x"], "test1"]
+        await cc.propose(...params);
+        params[3] = keccak256(new Buffer(params[3]));
+        let proposalId = await cc.hashProposal(...params);
+        await ma.delegate(owner.address);
+        await mineBlocks(1);
+        await cc.castVote(proposalId, 1); //  0 against / 1 for / 2 abstain
+
+        let votes = await cc.proposalVotes(proposalId);
+        console.log(`againstVotes: ${formatEther(votes[0])}`);
+        console.log(`forVotes: ${formatEther(votes[1])}`);
+    });
+
 });
