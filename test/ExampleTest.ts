@@ -25,6 +25,32 @@ describe("MockA", async () => {
     it("mockA.func => name()", async () => {
         expect(await ma.name()).to.equal("MockA");
     });
+
+    it("mockA.func => symbol()", async () => {
+        expect(await ma.symbol()).to.equal("MKA");
+    });
+
+    it("mockA.func => decimals()", async () => {
+        expect(await ma.decimals()).to.equal(18);
+    });
+
+    it("mockA.func => totalSupply()", async () => {
+        expect(await ma.totalSupply()).to.equal(parseEther("10000"));
+    });
+
+    it("mockA.func => balanceOf()", async () => {
+        expect(await ma.balanceOf(owner.address)).to.equal(parseEther("10000"));
+    });
+
+    it("mockA.func => transfer()", async () => {
+        await ma.transfer(user0.address, parseEther("100"));
+        expect(await ma.balanceOf(owner.address)).to.equal(parseEther("9900"));
+        expect(await ma.balanceOf(user0.address)).to.equal(parseEther("100"));
+    });
+
+    it("mockA.func => getVotes()", async () => {
+        expect(await ma.getVotes(owner.address)).to.equal(parseEther("0"));
+    });
 });
 
 describe("CopilotA", async () => {
