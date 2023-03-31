@@ -41,6 +41,12 @@ const func: DeployFunction = async function ({deployments, getNamedAccounts, net
         args: [mockA.address],
         log: true,
     });
+
+    const CopilotD = await deploy("CopilotD", {
+        from: owner,
+        args: [mockA.address,"TEST001"],
+        log: true,
+    });
 };
 export default func;
 func.tags = ["vault"];

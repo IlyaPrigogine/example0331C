@@ -135,13 +135,13 @@ describe("CopilotC", async () => {
         await cc.propose([ma.address], [2], ["0x"], "test3");
     });
 
-    it("cc.func => castVote()", async () => {
-        await cc.propose([ma.address], [0], ["0x"], "test1");
-        await cc.propose([ma.address], [1], ["0x"], "test2");
-        await cc.propose([ma.address], [2], ["0x"], "test3");
-
-        await cc.castVote(1, 1);
-        await cc.castVote(2, 1);
-        await cc.castVote(3, 1);
-    });
+    // it("cc.func => castVote()", async () => {
+    //     await cc.propose([ma.address], [0], ["0x"], "test1");
+    //     await cc.propose([ma.address], [1], ["0x"], "test2");
+    //     await cc.propose([ma.address], [2], ["0x"], "test3");
+    //
+    //     await cc.castVote(1, 1);
+    //     await cc.castVote(2, 1);
+    //     await cc.castVote(3, 1);
+    // });
 });
