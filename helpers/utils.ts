@@ -23,6 +23,7 @@ export async function getContracts() {
     const contracts: any = {
         copilotA: await ethers.getContract("CopilotA"),
         copilotB: await ethers.getContract("CopilotB"),
+        copilotC: await ethers.getContract("CopilotC"),
         mockA: await ethers.getContract("MockA"),
         mockB: await ethers.getContract("MockB"),
     };

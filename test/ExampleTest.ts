@@ -98,3 +98,34 @@ describe("CopilotB", async () => {
         console.log(`cb.address: ${cb.address}`);
     });
 });
+
+describe("CopilotC", async () => {
+    let
+        owner: any,
+        user0: any,
+        user1: any,
+        user2: any,
+        ma: any,
+        cc: any;
+    beforeEach(async () => {
+        let fixture = await setupFixture();
+        ma = fixture.mockA;
+        cc = fixture.copilotC;
+
+        owner = fixture.owner;
+        user0 = fixture.user0;
+        user1 = fixture.user1;
+        user2 = fixture.user2;
+    })
+    it("cc.func => address", async () => {
+        console.log(`cc.address: ${cc.address}`);
+    });
+
+    it("cc.func => name()", async () => {
+        expect(await cc.name()).to.equal("CopilotC");
+    });
+
+    it("cc.func => symbol()", async () => {
+        expect(await cc.symbol()).to.equal("CPC");
+    });
+});
