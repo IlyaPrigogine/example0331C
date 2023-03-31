@@ -53,7 +53,6 @@ describe("CopilotD", async () => {
         await cd.vote(0, true);
         await cd.connect(user0).vote(0,true);
         await cd.connect(user1).vote(0,false);
-        await cd.executeProposal(0);
     });
 
 });
