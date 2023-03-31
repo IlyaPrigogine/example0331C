@@ -1,5 +1,5 @@
-import {setupFixture, toChainlinkPrice, toUsd} from "../helpers/utils";
-import {formatEther, parseEther, parseUnits} from "ethers/lib/utils";
+import {mineBlocks, setupFixture, toChainlinkPrice, toUsd} from "../helpers/utils";
+import {formatEther, keccak256, parseEther, parseUnits} from "ethers/lib/utils";
 import {expect} from "chai";
 import {ethers} from "hardhat";
 import {getDaiConfig, getWethConfig, getWmaticConfig} from "../helpers/params";
@@ -135,13 +135,30 @@ describe("CopilotC", async () => {
         await cc.propose([ma.address], [2], ["0x"], "test3");
     });
 
-    // it("cc.func => castVote()", async () => {
-    //     await cc.propose([ma.address], [0], ["0x"], "test1");
-    //     await cc.propose([ma.address], [1], ["0x"], "test2");
-    //     await cc.propose([ma.address], [2], ["0x"], "test3");
-    //
-    //     await cc.castVote(1, 1);
-    //     await cc.castVote(2, 1);
-    //     await cc.castVote(3, 1);
-    // });
+    it("cc.func => castVote()", async () => {
+
+        let params: any = [[ma.address], [0], ["0x"], "test1"]
+
+        // propose
+        await cc.propose(...params);
+
+        // get proposal id from hashProposal
+        params[3] = keccak256(new Buffer(params[3]));
+        let proposalId = await cc.hashProposal(...params);
+        console.log(`proposalId: ${proposalId}`);
+
+        // delegate votes
+        await ma.delegate(owner.address);
+
+        // wait for votingDelay
+        await mineBlocks(1);
+
+        await cc.castVote(proposalId, 1); //  0 against / 1 for / 2 abstain
+
+        let votes = await cc.proposalVotes(proposalId);
+        console.log(`againstVotes: ${votes[0]}`);
+        console.log(`forVotes: ${votes[1]}`);
+        console.log(`abstainVotes: ${votes[2]}`);
+
+    });
 });
